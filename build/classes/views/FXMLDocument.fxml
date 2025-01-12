@@ -17,7 +17,7 @@
          <children>
             <ImageView fitHeight="83.0" fitWidth="270.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@logo.png" />
+                  <Image url="@../mygui/assets/logo.png" />
                </image>
             </ImageView>
             <Button fx:id="startBurron" alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="141.0" style="-fx-background-color: #ffffff;" text="Start" textFill="#8ccdf7">
