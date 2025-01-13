@@ -10,9 +10,14 @@ package classes;
  * @author user
  */
 public class RequestHandles {
-    static String username=null; 
+    String username=null; 
     
-    public static void messageDeligator(String networkmsg){};
+    public void messageDeligator(String networkmsg){};
+    
+    
+    /*
+    required to set username if authentication sucessful
+    */
     //authenticate();
     
 }

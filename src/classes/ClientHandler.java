@@ -23,6 +23,7 @@ public class ClientHandler implements Runnable {
     PrintWriter outputStream;
     BufferedReader inputStream;
     Socket mySocket;
+    RequestHandles handler;
     
 
     
@@ -34,31 +35,45 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         String firstmsg;
+        
         try {
-            outputStream=new PrintWriter(mySocket.getOutputStream());
+            outputStream = new PrintWriter(mySocket.getOutputStream());
             inputStream= new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-            firstmsg=inputStream.readLine();
-            //deligationfunction
-            RequestHandles.messageDeligator(firstmsg);
-            if(RequestHandles.username!=null)
-            {
-                onlineClientSockets.put(RequestHandles.username, outputStream);
+            handler = new RequestHandles();
+            do{ 
+                try {
+                    firstmsg=inputStream.readLine();
+                    handler.messageDeligator(firstmsg);
+                    if(handler.username!=null){
+                        onlineClientSockets.put(handler.username, outputStream);
+                    }
+                } catch (IOException ex) {
+                    outputStream.close();
+                    inputStream.close();
+                    mySocket.close();
+                }
             }
-            else
-            {
-                outputStream.close();
-                inputStream.close();
-                mySocket.close();
-                
+            while(handler.username==null);
+            
+            while(true){
+                try {
+                    handler.messageDeligator(inputStream.readLine());
+                } catch (IOException ex) {
+                    //client disconnected
+                    onlineClientSockets.remove(handler.username);
+                    outputStream.close();
+                    inputStream.close();
+                    mySocket.close();
+                }
             }
             
-            //database online 
             
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+    
     
     
 }
