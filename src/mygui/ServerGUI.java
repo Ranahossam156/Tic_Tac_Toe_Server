@@ -53,7 +53,7 @@ public class ServerGUI extends AnchorPane {
         imageView.setFitWidth(270.0);
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
-        imageView.setImage(new Image(getClass().getResource("logo.png").toExternalForm()));
+        imageView.setImage(new Image(getClass().getResource("assets/logo.png").toExternalForm()));
 
         startBurron.setAlignment(javafx.geometry.Pos.CENTER);
         startBurron.setMnemonicParsing(false);

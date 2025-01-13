@@ -27,7 +27,9 @@ public class Server {
                 new Thread(new ClientHandler(newClient)).start();
                 }
             } catch (IOException ex) {
-               System.out.println("error in server creation");
+                System.out.println("Error in server creation");
+                ex.printStackTrace();
+               
             }
 
         }

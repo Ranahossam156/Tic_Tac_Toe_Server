@@ -5,11 +5,11 @@
  */
 package mygui;
 
+//import classes.DatabaseLayer;
 import classes.Server;
-import java.net.ServerSocket;
-import java.net.Socket;
+
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,10 +25,10 @@ public class MyGUI extends Application {
         Parent root = new ServerGUI();
         
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("Styles/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/Styles/style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-        
+        //DatabaseLayer.insert();
         new Thread(()->{
             new Server();
             
