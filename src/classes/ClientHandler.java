@@ -9,10 +9,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
 
 /**
  *
@@ -35,11 +37,13 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         String firstmsg;
+        System.out.println("connection about to establish");
         
         try {
-            outputStream = new PrintWriter(mySocket.getOutputStream());
+            outputStream = new PrintWriter(mySocket.getOutputStream(),true);
             inputStream= new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
             handler = new RequestHandles();
+            /*
             do{ 
                 try {
                     firstmsg=inputStream.readLine();
@@ -53,11 +57,24 @@ public class ClientHandler implements Runnable {
                     mySocket.close();
                 }
             }
-            while(handler.username==null);
-            
+            while(handler.username==null);*////////////////Commented for testing other requests than authentication//////////////////////////////////////////////////////////////////////////
+            String receivedmsg;
+            String mynametest;
             while(true){
                 try {
-                    handler.messageDeligator(inputStream.readLine());
+                    receivedmsg=inputStream.readLine();
+                    try
+                    {
+                        mynametest=Json.createReader(new StringReader(receivedmsg)).readObject().getString("myname");
+                        onlineClientSockets.put(mynametest, outputStream);///////////////this line should be removed after integration
+                        handler.username=mynametest;
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
+                    
+                    handler.messageDeligator(receivedmsg);
                 } catch (IOException ex) {
                     //client disconnected
                     onlineClientSockets.remove(handler.username);

@@ -21,7 +21,7 @@ public class Server {
         public Server()
         {
             try {
-                server = new ServerSocket(5000);
+                server = new ServerSocket(5005);
                 while(true){
                 newClient=server.accept();
                 new Thread(new ClientHandler(newClient)).start();
