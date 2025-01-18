@@ -7,6 +7,9 @@ package classes;
 
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.*;
 
 /**
@@ -15,9 +18,11 @@ import javax.json.*;
  */
 public class RequestHandles {
 
-    String username = null;
-
-    public void messageDeligator(String networkmsg, PrintWriter clientOutput) {
+    String authorizedUsername = null;
+    PrintWriter clientOutput;
+    
+    
+    public void messageDeligator(String networkmsg) {
         JsonReader jsonReader = Json.createReader(new StringReader(networkmsg));
         JsonObject jsonObject = jsonReader.readObject();
 
@@ -27,22 +32,27 @@ public class RequestHandles {
                 System.out.println("server received request");
                 sendGameRequest(jsonObject);
                 break;
+                
+                case "acceptGameRequest":
+                    System.out.println("server received acceptance request");
+                    gameAcceptanceRequest(jsonObject);
+                break;
             case "register":
                 handleRegister(jsonObject, clientOutput);
                 break;
             default:
-
+            
         }
     }
-
-    public void sendGameRequest(JsonObject jsonMsg) {
-
-        String opponentName = jsonMsg.getString("username");
-        PrintWriter opponentPW = ClientHandler.onlineClientSockets.get(opponentName);
+    private void sendGameRequest(JsonObject jsonMsg)
+    {
+        
+        String opponentName=jsonMsg.getString("username");
+        PrintWriter opponentPW= ClientHandler.onlineClientSockets.get(opponentName);
         JsonObjectBuilder value = Json.createObjectBuilder();
         JsonObject jsonmsg = value
                 .add("Header", "gameRequest")
-                .add("username", username)
+                .add("username", authorizedUsername)
                 .build();
         opponentPW.println(jsonmsg.toString());
     }
@@ -65,6 +75,7 @@ public class RequestHandles {
             responseBuilder.add("Header", "registerResponse")
                     .add("success", isRegistered)
                     .add("message", isRegistered ? "Registration successful!" : "Registration failed.");
+          authorizedUsername=username;
         }
 
         // Send the response directly to the client
@@ -75,4 +86,31 @@ public class RequestHandles {
     required to set username if authentication sucessful
      */
     //authenticate();
+
+    private void gameAcceptanceRequest(JsonObject jsonMsg) {
+        
+            //update databse to be unavailable
+            //send acceptance to other client
+            DatabaseLayer.updateAvailabilty(jsonMsg.getString("opponentUsername"),false);
+            DatabaseLayer.updateAvailabilty(authorizedUsername,false);
+            sendGameAcceptanceResponce(jsonMsg.getString("opponentUsername"));
+       
+        
+        
+        
+    }
+    
+    private void sendGameAcceptanceResponce(String opponentUsername)
+    {
+        JsonObjectBuilder value = Json.createObjectBuilder();
+        JsonObject jsonmsg= value
+                .add("Header", "gameAcceptanceResponce")
+                .add("opponentUsername", authorizedUsername)
+                .build();
+        
+        PrintWriter opponentPW= ClientHandler.onlineClientSockets.get(opponentUsername);
+        opponentPW.println(jsonmsg.toString());
+    }
+    
+
 }
