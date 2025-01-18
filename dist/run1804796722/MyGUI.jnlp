@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="MyGUI.jar" size="50946" download="eager" />
+    <jar href="MyGUI.jar" size="51504" download="eager" />
     <jar href="lib\derby.jar" size="3230946" download="eager" />
     <jar href="lib\derbyclient.jar" size="587986" download="eager" />
     <jar href="lib\derbynet.jar" size="272410" download="eager" />

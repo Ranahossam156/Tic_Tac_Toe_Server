@@ -6,6 +6,9 @@
 package classes;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.*;
 /**
  *
@@ -27,11 +30,14 @@ public class RequestHandles {
                 System.out.println("server received request");
                 sendGameRequest(jsonObject);
                 break;
+                
+                case "acceptGameRequest":
+                    System.out.println("server received acceptance request");
+                    gameAcceptanceRequest(jsonObject);
                 default:
-            
         }
     }
-    public void sendGameRequest(JsonObject jsonMsg)
+    private void sendGameRequest(JsonObject jsonMsg)
     {
         
         String opponentName=jsonMsg.getString("username");
@@ -49,5 +55,30 @@ public class RequestHandles {
     required to set username if authentication sucessful
     */
     //authenticate();
+
+    private void gameAcceptanceRequest(JsonObject jsonMsg) {
+        
+            //update databse to be unavailable
+            //send acceptance to other client
+            DatabaseLayer.updateAvailabilty(jsonMsg.getString("opponentUsername"),false);
+            DatabaseLayer.updateAvailabilty(username,false);
+            sendGameAcceptanceResponce(jsonMsg.getString("opponentUsername"));
+       
+        
+        
+        
+    }
+    
+    private void sendGameAcceptanceResponce(String opponentUsername)
+    {
+        JsonObjectBuilder value = Json.createObjectBuilder();
+        JsonObject jsonmsg= value
+                .add("Header", "gameAcceptanceResponce")
+                .add("opponentUsername", username)
+                .build();
+        
+        PrintWriter opponentPW= ClientHandler.onlineClientSockets.get(opponentUsername);
+        opponentPW.println(jsonmsg.toString());
+    }
     
 }

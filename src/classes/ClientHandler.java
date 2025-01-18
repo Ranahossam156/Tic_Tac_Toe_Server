@@ -63,17 +63,18 @@ public class ClientHandler implements Runnable {
             while(true){
                 try {
                     receivedmsg=inputStream.readLine();
+                    ///////////////the following should be removed after integration
                     try
                     {
                         mynametest=Json.createReader(new StringReader(receivedmsg)).readObject().getString("myname");
-                        onlineClientSockets.put(mynametest, outputStream);///////////////this line should be removed after integration
+                        onlineClientSockets.put(mynametest, outputStream);
                         handler.username=mynametest;
                     }
                     catch (Exception e)
                     {
                         
                     }
-                    
+                    ///////////////the previous should be removed after integration
                     handler.messageDeligator(receivedmsg);
                 } catch (IOException ex) {
                     //client disconnected
