@@ -74,7 +74,7 @@ public class ClientHandler implements Runnable {
                         
                     }
                     
-                    handler.messageDeligator(receivedmsg);
+                    handler.messageDeligator(receivedmsg,outputStream);
                 } catch (IOException ex) {
                     //client disconnected
                     onlineClientSockets.remove(handler.username);
