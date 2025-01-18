@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
             outputStream = new PrintWriter(mySocket.getOutputStream(),true);
             inputStream= new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
             handler = new RequestHandles();
-            handler.clientOutput=outputstream;
+            handler.clientOutput=outputStream;
             
             do{ 
                 try {
@@ -63,9 +63,8 @@ public class ClientHandler implements Runnable {
           
             while(true){
                 try {
-                    receivedmsg=inputStream.readLine();
 
-                    handler.messageDeligator(receivedmsg);
+                    handler.messageDeligator(inputStream.readLine());
 
                 } catch (IOException ex) {
                     //client disconnected

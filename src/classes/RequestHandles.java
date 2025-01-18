@@ -20,6 +20,8 @@ public class RequestHandles {
 
     String authorizedUsername = null;
     PrintWriter clientOutput;
+    
+    
     public void messageDeligator(String networkmsg) {
         JsonReader jsonReader = Json.createReader(new StringReader(networkmsg));
         JsonObject jsonObject = jsonReader.readObject();
