@@ -34,8 +34,6 @@ public class RequestHandles {
 
                 break;
 
-
-
             case "acceptGameRequest":
                 System.out.println("server received acceptance request");
                 gameAcceptanceRequest(jsonObject);
@@ -46,7 +44,7 @@ public class RequestHandles {
 
             case "login":
                 loginRequest(jsonObject);
-                break ; 
+                break;
 
             case "getOnlinePlayers":
                 handleGetOnlinePlayers(jsonObject, clientOutput);
@@ -120,12 +118,15 @@ public class RequestHandles {
         opponentPW.println(jsonmsg.toString());
     }
 
-
     private void loginRequest(JsonObject obj) {
         boolean flag = false;
         String userName = obj.getString("user-name");
         String password = obj.getString("password");
         flag = DatabaseLayer.checkLoginRequest(userName, password);
+        if (flag) {
+            ClientHandler.onlineClientSockets.put(userName, clientOutput);
+            authorizedUsername = userName;
+        }
         System.out.println("login request  user name " + userName + " passwoed  " + password);
         loginResponse(flag);
     }
@@ -146,6 +147,7 @@ public class RequestHandles {
             System.out.println("Output stream is not initialized. Check server connection.");
         }
     }
+
     private void handleGetOnlinePlayers(JsonObject jsonMsg, PrintWriter clientOutput) {
         JsonArrayBuilder playersArrayBuilder = Json.createArrayBuilder();
         for (String username : ClientHandler.onlineClientSockets.keySet()) {
@@ -159,7 +161,5 @@ public class RequestHandles {
                 .build();
         clientOutput.println(response.toString());
     }
-    
-
 
 }
