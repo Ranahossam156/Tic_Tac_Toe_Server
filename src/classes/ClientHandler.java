@@ -66,7 +66,7 @@ public class ClientHandler implements Runnable {
                 try {
 
                     handler.messageDeligator(inputStream.readLine());
-
+                    System.out.println("test");
                 } catch (IOException ex) {
                     //client disconnected
                     onlineClientSockets.remove(handler.authorizedUsername);

@@ -31,7 +31,10 @@ public class RequestHandles {
             case "gameRequest":
                 System.out.println("server received request");
                 sendGameRequest(jsonObject);
+
                 break;
+
+
 
             case "acceptGameRequest":
                 System.out.println("server received acceptance request");
@@ -40,9 +43,16 @@ public class RequestHandles {
             case "register":
                 handleRegister(jsonObject, clientOutput);
                 break;
+
             case "login":
                 loginRequest(jsonObject);
                 break ; 
+
+            case "getOnlinePlayers":
+                handleGetOnlinePlayers(jsonObject, clientOutput);
+                System.out.println("Data acquired");
+                break;
+
             default:
 
         }
@@ -110,6 +120,7 @@ public class RequestHandles {
         opponentPW.println(jsonmsg.toString());
     }
 
+
     private void loginRequest(JsonObject obj) {
         boolean flag = false;
         String userName = obj.getString("user-name");
@@ -135,5 +146,20 @@ public class RequestHandles {
             System.out.println("Output stream is not initialized. Check server connection.");
         }
     }
+    private void handleGetOnlinePlayers(JsonObject jsonMsg, PrintWriter clientOutput) {
+        JsonArrayBuilder playersArrayBuilder = Json.createArrayBuilder();
+        for (String username : ClientHandler.onlineClientSockets.keySet()) {
+            playersArrayBuilder.add(Json.createObjectBuilder()
+                    .add("username", username)
+                    .build());
+        }
+        JsonObject response = Json.createObjectBuilder()
+                .add("Header", "onlinePlayersList")
+                .add("players", playersArrayBuilder.build())
+                .build();
+        clientOutput.println(response.toString());
+    }
+    
+
 
 }
