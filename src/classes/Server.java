@@ -25,6 +25,7 @@ public class Server {
                 while(true){
                 newClient=server.accept();
                 new Thread(new ClientHandler(newClient)).start();
+                System.out.println("server creation is Done  ");
                 }
             } catch (IOException ex) {
                 System.out.println("Error in server creation");
