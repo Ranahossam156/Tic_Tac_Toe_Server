@@ -24,7 +24,7 @@ public class DatabaseLayer {
     static {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Players", "root", "root");
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tac Toe", "root", "root");
         } catch (SQLException ex) {
             System.out.println("error in database connection");
         }
@@ -55,20 +55,17 @@ public class DatabaseLayer {
         }
     }
 
-    
-    static boolean updateAvailabilty(String username,boolean isAvailable ) 
-    {
-        
-        PreparedStatement  updateStmt;
+    static boolean updateAvailabilty(String username, boolean isAvailable) {
+
+        PreparedStatement updateStmt;
         try {
             updateStmt = con.prepareStatement("UPDATE PLAYERS SET AVAILABLE=? WHERE USERNAME=?");
-         
-        System.out.println("update statement done");
-        updateStmt.setString(2,isAvailable? "true":"false");
-        updateStmt.setString(1,username);
-        return updateStmt.executeUpdate()>0;
-        }
-        catch (SQLException ex) {
+
+            System.out.println("update statement done");
+            updateStmt.setString(2, isAvailable ? "true" : "false");
+            updateStmt.setString(1, username);
+            return updateStmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
             System.out.println("Error in updating availabilty in DB");
             ex.printStackTrace();
             return false;
@@ -86,8 +83,8 @@ public class DatabaseLayer {
             insertStmt.setString(2, password);
             insertStmt.setString(3, email);
             insertStmt.setInt(4, 0);
-            insertStmt.setBoolean(5, false);
-            insertStmt.setBoolean(6, false);
+            insertStmt.setBoolean(5, true);
+            insertStmt.setBoolean(6, true);
 
             return insertStmt.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -95,20 +92,53 @@ public class DatabaseLayer {
             return false;
         }
     }
-    public static boolean isUsernameTaken(String username) {
-    try {
-        PreparedStatement stmt = con.prepareStatement("SELECT COUNT(*) FROM PLAYERS WHERE USERNAME = ?");
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    }
-    return false;
-}
 
+    public static boolean isUsernameTaken(String username) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT COUNT(*) FROM PLAYERS WHERE USERNAME = ?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public static int getOnlineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getAvailableCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE AVAILABLE = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getOfflineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = FALSE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
 
     //methods of database
 }

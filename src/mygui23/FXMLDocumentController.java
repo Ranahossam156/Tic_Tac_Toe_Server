@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygui;
+package mygui23;
 
 import classes.DatabaseLayer;
+import mygui.*;
 import classes.Server;
 import java.net.URL;
 import java.sql.SQLException;
@@ -34,6 +35,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private BarChart<String, Number> barChart;
     private Server server;
+    CategoryAxis xAxis;
+    NumberAxis yAxis;
 
     /**
      * Initializes the controller class.
@@ -41,77 +44,50 @@ public class FXMLDocumentController implements Initializable {
 @Override
 public void initialize(URL url, ResourceBundle rb) {
     System.out.println("reached controller");
-
-    initializeServer();
-    configureBarChart();
-    initializeData();
-    startDynamicUpdates();
-}
-
-private void initializeServer() {
     server = new Server();
-}
-
-private void configureBarChart() {
     NumberAxis yAxis = (NumberAxis) barChart.getYAxis();
-
-    // Configure the y-axis
-    yAxis.setAutoRanging(false);
-    yAxis.setLowerBound(0);
-    yAxis.setUpperBound(10); // Adjust as needed
-    yAxis.setTickUnit(1);
+    yAxis.setAutoRanging(false); 
+    yAxis.setLowerBound(0); 
+    yAxis.setUpperBound(10); 
+    yAxis.setTickUnit(1); 
     yAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxis) {
         @Override
         public String toString(Number object) {
             return String.format("%d", object.intValue());
         }
     });
-}
-
-private void initializeData() {
-    XYChart.Series<String, Number> data = createInitialData();
-    barChart.getData().add(data);
-}
-
-private XYChart.Series<String, Number> createInitialData() {
-    XYChart.Series<String, Number> data = new XYChart.Series<>();
-    data.setName("Users Status");
+    final int[] onlineCount = new int[1];
+    final int[] availableCount = new int[1];
+    final int[] offlineCount = new int[1];
 
     try {
-        int onlineCount = DatabaseLayer.getOnlineCount();
-        int availableCount = DatabaseLayer.getAvailableCount();
-        int offlineCount = DatabaseLayer.getOfflineCount();
-
-        // Add initial data to the series
-        data.getData().add(new XYChart.Data<>("Online", onlineCount));
-        data.getData().add(new XYChart.Data<>("Available to play", availableCount));
-        data.getData().add(new XYChart.Data<>("Offline", offlineCount));
-    } catch (SQLException e) {
-        e.printStackTrace();
+        onlineCount[0] = DatabaseLayer.getOnlineCount();
+        availableCount[0] = DatabaseLayer.getAvailableCount();
+        offlineCount[0] = DatabaseLayer.getOfflineCount();
+    } catch (SQLException sQLException) {
+        sQLException.printStackTrace();
     }
 
-    return data;
-}
+    XYChart.Series<String, Number> data = new XYChart.Series<>();
+    data.setName("Users Status");
+    data.getData().add(new XYChart.Data<>("Online", onlineCount[0]));
+    data.getData().add(new XYChart.Data<>("Available to play", availableCount[0]));
+    data.getData().add(new XYChart.Data<>("Offline", offlineCount[0]));
 
-private void startDynamicUpdates() {
-    XYChart.Series<String, Number> data = barChart.getData().get(0);
+    barChart.getData().add(data);
 
     new Thread(() -> {
         while (true) {
             try {
-                // Fetch updated data from the database
-                int onlineCount = DatabaseLayer.getOnlineCount();
-                int availableCount = DatabaseLayer.getAvailableCount();
-                int offlineCount = DatabaseLayer.getOfflineCount();
-
-                // Update data points on the JavaFX Application Thread
+                onlineCount[0] = DatabaseLayer.getOnlineCount();
+                availableCount[0] = DatabaseLayer.getAvailableCount();
+                offlineCount[0] = DatabaseLayer.getOfflineCount();
                 javafx.application.Platform.runLater(() -> {
-                    data.getData().get(0).setYValue(onlineCount);
-                    data.getData().get(1).setYValue(availableCount);
-                    data.getData().get(2).setYValue(offlineCount);
+                    data.getData().get(0).setYValue(onlineCount[0]);
+                    data.getData().get(1).setYValue(availableCount[0]);
+                    data.getData().get(2).setYValue(offlineCount[0]);
                 });
 
-                // Pause before updating again
                 Thread.sleep(1000);
             } catch (SQLException | InterruptedException e) {
                 e.printStackTrace();
