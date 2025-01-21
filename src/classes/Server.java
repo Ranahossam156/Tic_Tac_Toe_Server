@@ -1,39 +1,64 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package classes;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author user
- */
 public class Server {
-        Socket newClient;
-        ServerSocket server;
-        public Server()
-        {
-            try {
-                server = new ServerSocket(5005);
-                while(true){
-                newClient=server.accept();
-                new Thread(new ClientHandler(newClient)).start();
-                System.out.println("server creation is Done  ");
-                }
-            } catch (IOException ex) {
-                System.out.println("Error in server creation");
-                ex.printStackTrace();
-               
-            }
+    private ServerSocket serverSocket;
+    private boolean acceptingClients = false;
 
+    public void startServer() {
+        if (acceptingClients) {
+            System.out.println("Server is already running...");
+            return;
         }
 
-    
+        acceptingClients = true;
+        try {
+            serverSocket = new ServerSocket(5005);
+            System.out.println("Server started...");
+
+            while (acceptingClients) {
+                try {
+                    Socket newClient = serverSocket.accept();
+                    System.out.println("New client connected...");
+                    new Thread(new ClientHandler(newClient)).start();
+                } catch (IOException e) {
+                    if (acceptingClients) {
+                        System.out.println("Error accepting client connection");
+                        e.printStackTrace();
+                    } else {
+                        System.out.println("Stopped accepting new clients.");
+                    }
+
+                }
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error in server setup");
+            ex.printStackTrace();
+        }
+//        } finally {
+//            stopServer();
+//        }
+    }
+
+    public void stopServer() {
+        acceptingClients = false;
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+                System.out.println("Server stopped accepting new clients...");
+            }
+        } catch (IOException e) {
+            System.out.println("Error stopping server socket");
+            e.printStackTrace();
+        }
+    }
+//
+//    public void stopServer() {
+//        stopAcceptingClients();
+//        System.out.println("Server fully shut down.");
+//    }
 }

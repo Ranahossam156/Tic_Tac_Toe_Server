@@ -1,5 +1,6 @@
 package mygui;
 
+import classes.DatabaseLayer;
 import javafx.geometry.Insets;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -16,7 +17,7 @@ public class ServerGUI extends AnchorPane {
 
     protected final VBox vBox;
     protected final ImageView imageView;
-    protected final Button startBurron;
+    protected final Button startButton;
     protected final Button closeButton;
     protected final CategoryAxis categoryAxis;
     protected final NumberAxis numberAxis;
@@ -26,7 +27,7 @@ public class ServerGUI extends AnchorPane {
 
         vBox = new VBox();
         imageView = new ImageView();
-        startBurron = new Button();
+        startButton = new Button();
         closeButton = new Button();
         categoryAxis = new CategoryAxis();
         numberAxis = new NumberAxis();
@@ -55,15 +56,15 @@ public class ServerGUI extends AnchorPane {
         imageView.setPreserveRatio(true);
         imageView.setImage(new Image(getClass().getResource("assets/logo.png").toExternalForm()));
 
-        startBurron.setAlignment(javafx.geometry.Pos.CENTER);
-        startBurron.setMnemonicParsing(false);
-        startBurron.setPrefHeight(50.0);
-        startBurron.setPrefWidth(141.0);
-        startBurron.setStyle("-fx-background-color: #ffffff;");
-        startBurron.setText("Start");
-        startBurron.setTextFill(javafx.scene.paint.Color.valueOf("#8ccdf7"));
-        startBurron.setFont(new Font("System Bold", 14.0));
-        VBox.setMargin(startBurron, new Insets(30.0, 0.0, 30.0, 0.0));
+        startButton.setAlignment(javafx.geometry.Pos.CENTER);
+        startButton.setMnemonicParsing(false);
+        startButton.setPrefHeight(50.0);
+        startButton.setPrefWidth(141.0);
+        startButton.setStyle("-fx-background-color: #ffffff;");
+        startButton.setText("Start");
+        startButton.setTextFill(javafx.scene.paint.Color.valueOf("#8ccdf7"));
+        startButton.setFont(new Font("System Bold", 14.0));
+        VBox.setMargin(startButton, new Insets(30.0, 0.0, 30.0, 0.0));
 
         closeButton.setMnemonicParsing(false);
         closeButton.setPrefHeight(28.0);
@@ -73,41 +74,41 @@ public class ServerGUI extends AnchorPane {
         closeButton.setTextFill(javafx.scene.paint.Color.valueOf("#8ccdf7"));
         VBox.setMargin(closeButton, new Insets(0.0, 0.0, 30.0, 0.0));
         closeButton.setFont(new Font("System Bold", 14.0));
-
-        categoryAxis.setLabel("Status");
-
-        numberAxis.setLabel("Number of user");
-        numberAxis.setSide(javafx.geometry.Side.LEFT);
-        barChart.setPrefHeight(411.0);
-        barChart.setPrefWidth(750.0);
-        CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Status");
-        categoryAxis.setStyle("-fx-label-fill: white;");
-        numberAxis.setStyle("-fx-label-fill: white;");
-        
-
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Number of Users");
-
-        // Create the BarChart
-        // BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        // Add data to the BarChart
-        XYChart.Series<String, Number> data = new XYChart.Series<>();
-        data.setName("Users Status");
-         //   data.getNode().setStyle("-fx-text-fill: #ff6347;");
-        data.getData().add(new XYChart.Data<>("Online", 50));
-        data.getData().add(new XYChart.Data<>("Available to play", 30));
-        data.getData().add(new XYChart.Data<>("Offline", 40));
-        
-        categoryAxis.setStyle("-fx-tick-label-font-size: 14px; -fx-tick-label-font-weight: bold;");
-        numberAxis.setStyle("-fx-tick-label-font-size: 14px; -fx-tick-label-font-weight: bold;");
-//barChart.lookupAll(".default-color0.chart-bar").forEach(bar -> bar.setStyle("-fx-bar-fill: #8ccdf7;"));
-        categoryAxis.setTickLabelFill(javafx.scene.paint.Color.valueOf("#ffffff"));
-        numberAxis.setTickLabelFill(javafx.scene.paint.Color.valueOf("#ffffff"));
-        barChart.getData().add(data);
+//
+//        categoryAxis.setLabel("Status");
+//
+//        numberAxis.setLabel("Number of user");
+//        numberAxis.setSide(javafx.geometry.Side.LEFT);
+//        barChart.setPrefHeight(411.0);
+//        barChart.setPrefWidth(750.0);
+//        CategoryAxis xAxis = new CategoryAxis();
+//        xAxis.setLabel("Status");
+//        categoryAxis.setStyle("-fx-label-fill: white;");
+//        numberAxis.setStyle("-fx-label-fill: white;");
+//        
+//
+//        NumberAxis yAxis = new NumberAxis();
+//        yAxis.setLabel("Number of Users");
+//
+//        // Create the BarChart
+//        // BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+//        // Add data to the BarChart
+//        XYChart.Series<String, Number> data = new XYChart.Series<>();
+//        data.setName("Users Status");
+//         //   data.getNode().setStyle("-fx-text-fill: #ff6347;");
+//        data.getData().add(new XYChart.Data<>("Online", DatabaseLayer.getOnlineCount()));
+//        data.getData().add(new XYChart.Data<>("Available to play", DatabaseLayer.getAvailableCount()));
+//        data.getData().add(new XYChart.Data<>("Offline", DatabaseLayer.getOfflineCount()));
+//        
+//        categoryAxis.setStyle("-fx-tick-label-font-size: 14px; -fx-tick-label-font-weight: bold;");
+//        numberAxis.setStyle("-fx-tick-label-font-size: 14px; -fx-tick-label-font-weight: bold;");
+////barChart.lookupAll(".default-color0.chart-bar").forEach(bar -> bar.setStyle("-fx-bar-fill: #8ccdf7;"));
+//        categoryAxis.setTickLabelFill(javafx.scene.paint.Color.valueOf("#ffffff"));
+//        numberAxis.setTickLabelFill(javafx.scene.paint.Color.valueOf("#ffffff"));
+//        barChart.getData().add(data);
 
         vBox.getChildren().add(imageView);
-        vBox.getChildren().add(startBurron);
+        vBox.getChildren().add(startButton);
         vBox.getChildren().add(closeButton);
         vBox.getChildren().add(barChart);
         getChildren().add(vBox);

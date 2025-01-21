@@ -58,6 +58,7 @@ public class DatabaseLayer {
     }*/
     static boolean updateAvailabilty(String username, boolean isAvailable) {
 
+
         PreparedStatement updateStmt;
         try {
             updateStmt = con.prepareStatement("UPDATE PLAYERS SET AVAILABLE=? WHERE USERNAME=?");
@@ -84,8 +85,8 @@ public class DatabaseLayer {
             insertStmt.setString(2, password);
             insertStmt.setString(3, email);
             insertStmt.setInt(4, 0);
-            insertStmt.setBoolean(5, false);
-            insertStmt.setBoolean(6, false);
+            insertStmt.setBoolean(5, true);
+            insertStmt.setBoolean(6, true);
 
             return insertStmt.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -108,6 +109,39 @@ public class DatabaseLayer {
         return false;
     }
 
+
+    public static int getOnlineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getAvailableCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE AVAILABLE = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getOfflineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = FALSE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
     public static boolean checkLoginRequest(String name, String password) {
 
         if (con != null) {
