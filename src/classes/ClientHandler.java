@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
             do{ 
                 try {
                     firstmsg=inputStream.readLine();
-                    
+                    System.out.println("first msg" + firstmsg);
                     handler.messageDeligator(firstmsg);
                     if(handler.authorizedUsername!=null){
                         onlineClientSockets.put(handler.authorizedUsername, outputStream);
@@ -57,6 +57,7 @@ public class ClientHandler implements Runnable {
                     outputStream.close();
                     inputStream.close();
                     mySocket.close();
+                    System.out.println("feild to read msg");
                 }
             }
             while(handler.authorizedUsername==null);
@@ -65,7 +66,7 @@ public class ClientHandler implements Runnable {
                 try {
 
                     handler.messageDeligator(inputStream.readLine());
-
+                    System.out.println("test");
                 } catch (IOException ex) {
                     //client disconnected
                     onlineClientSockets.remove(handler.authorizedUsername);

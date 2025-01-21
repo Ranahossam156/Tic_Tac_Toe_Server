@@ -36,10 +36,12 @@ public class MyGUI extends Application {
         stage.setScene(scene);
         stage.show();
         //DatabaseLayer.insert();
-//        new Thread(()->{
-//            new Server();
-//            
-//        }).start();
+
+        new Thread(()->{
+            System.out.println("start to creat the server ");
+            new Server();
+            
+        }).start();
     }
 
     /**
