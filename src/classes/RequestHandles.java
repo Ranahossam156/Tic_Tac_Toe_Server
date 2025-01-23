@@ -50,8 +50,15 @@ public class RequestHandles {
                 handleGetOnlinePlayers(jsonObject);
                 System.out.println("Data acquired");
                 break;
+
+            case "sendXOPlay":
+                requestXo(jsonObject);
+                break;
+
+
             case "Logout":
                 logutHandle(jsonObject);
+
             default:
 
         }
@@ -176,10 +183,26 @@ public class RequestHandles {
         clientOutput.println(response.toString());
     }
 
+
+    private void requestXo(JsonObject jsonObject) {
+     
+        String player = jsonObject.getString("player");
+        int position = jsonObject.getInt("position") ; 
+        JsonObject object = Json.createObjectBuilder()
+                .add("Header", "XOPlay")
+                .add("position" , position)
+                .build();
+        String jsonString = object.toString();
+
+        PrintWriter pw = ClientHandler.onlineClientSockets.get(player);
+        pw.println(jsonString);
+        
+
     private void logutHandle(JsonObject jsonObject) {
         DatabaseLayer.updatePlayerStatus(jsonObject.getString("username"),false,false);
         ClientHandler.onlineClientSockets.remove(jsonObject.getString("username"));
         
+
     }
 
 }
