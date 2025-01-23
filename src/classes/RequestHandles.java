@@ -160,10 +160,13 @@ public class RequestHandles {
     private void handleGetOnlinePlayers(JsonObject jsonMsg) {
         JsonArrayBuilder playersArrayBuilder = Json.createArrayBuilder();
         for (String username : ClientHandler.onlineClientSockets.keySet()) {
-            playersArrayBuilder.add(Json.createObjectBuilder()
-                    .add("username", username)
-                    .build());
-        }
+            // Fetch the AVAILABLE flag from the database
+        boolean isAvailable = DatabaseLayer.isPlayerAvailable(username);
+        playersArrayBuilder.add(Json.createObjectBuilder()
+                .add("username", username)
+                .add("available", isAvailable)
+                .build());
+    }
         JsonObject response = Json.createObjectBuilder()
                 .add("Header", "onlinePlayersList")
                 .add("players", playersArrayBuilder.build())
