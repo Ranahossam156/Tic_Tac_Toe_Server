@@ -50,7 +50,8 @@ public class RequestHandles {
                 handleGetOnlinePlayers(jsonObject);
                 System.out.println("Data acquired");
                 break;
-
+            case "Logout":
+                logutHandle(jsonObject);
             default:
 
         }
@@ -172,6 +173,12 @@ public class RequestHandles {
                 .add("players", playersArrayBuilder.build())
                 .build();
         clientOutput.println(response.toString());
+    }
+
+    private void logutHandle(JsonObject jsonObject) {
+        DatabaseLayer.updatePlayerStatus(jsonObject.getString("username"),false,false);
+        ClientHandler.onlineClientSockets.remove(jsonObject.getString("username"));
+        
     }
 
 }
