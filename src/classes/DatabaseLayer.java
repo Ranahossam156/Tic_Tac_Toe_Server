@@ -25,7 +25,7 @@ public class DatabaseLayer {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tac Teo", "root", "root");
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Players", "root", "root");
 
         } catch (SQLException ex) {
             System.out.println("error in database connection" + ex.getMessage());
@@ -64,8 +64,8 @@ public class DatabaseLayer {
             updateStmt = con.prepareStatement("UPDATE PLAYERS SET AVAILABLE=? WHERE USERNAME=?");
 
             System.out.println("update statement done");
-            updateStmt.setString(2, isAvailable ? "true" : "false");
-            updateStmt.setString(1, username);
+            updateStmt.setString(1, isAvailable ? "true" : "false");
+            updateStmt.setString(2, username);
             return updateStmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             System.out.println("Error in updating availabilty in DB");
@@ -84,7 +84,7 @@ public class DatabaseLayer {
             insertStmt.setString(1, username);
             insertStmt.setString(2, password);
             insertStmt.setString(3, email);
-            insertStmt.setInt(4, 0);
+            insertStmt.setInt(4, 100);
             insertStmt.setBoolean(5, true);
             insertStmt.setBoolean(6, true);
 
@@ -165,4 +165,27 @@ public class DatabaseLayer {
         return false;
     }
     //methods of database
+    public static Player getPlayerinfo(String username)
+    {
+        try {
+            PreparedStatement selectUser = con.prepareStatement("SELECT  EMAIL, SCORE From PLAYERS WHERE USERNAME = ?");
+            selectUser.setString(1, username);
+            ResultSet result = selectUser.executeQuery();
+            if(result.next())
+            {
+                return new Player(username, result.getString(1), result.getInt(2));
+            }
+            else
+            {
+                return null;
+            }
+            //System.out.println(result.getString(1)+ result.getInt(2));
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("");
+        return null;
+    }
 }
