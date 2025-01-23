@@ -25,7 +25,9 @@ public class DatabaseLayer {
         try {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tac Teo", "root", "root");
+
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tak Toe", "root", "root");
+
 
         } catch (SQLException ex) {
             System.out.println("error in database connection" + ex.getMessage());
@@ -58,6 +60,7 @@ public class DatabaseLayer {
     }*/
     static boolean updateAvailabilty(String username, boolean isAvailable) {
 
+
         PreparedStatement updateStmt;
         try {
             updateStmt = con.prepareStatement("UPDATE PLAYERS SET AVAILABLE=? WHERE USERNAME=?");
@@ -83,9 +86,9 @@ public class DatabaseLayer {
             insertStmt.setString(1, username);
             insertStmt.setString(2, password);
             insertStmt.setString(3, email);
-            insertStmt.setInt(4, 0);
-            insertStmt.setBoolean(5, false);
-            insertStmt.setBoolean(6, false);
+            insertStmt.setInt(4, 100);
+            insertStmt.setBoolean(5, true);
+            insertStmt.setBoolean(6, true);
 
             return insertStmt.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -108,27 +111,117 @@ public class DatabaseLayer {
         return false;
     }
 
-    public static boolean checkLoginRequest(String name, String password) {
 
+    public static int getOnlineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getAvailableCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE AVAILABLE = TRUE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static int getOfflineCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM PLAYERS WHERE ONLINEFLAG = FALSE";
+        try (PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+    public static boolean checkLoginRequest(String name, String password) {
         if (con != null) {
             try {
-                PreparedStatement selectUser = con.prepareStatement("SELECT * From PLAYERS WHERE USERNAME = ? AND PASSWORD = ?");
+                PreparedStatement selectUser = con.prepareStatement(
+                    "SELECT * FROM PLAYERS WHERE USERNAME = ? AND PASSWORD = ?"
+                );
                 selectUser.setString(1, name);
                 selectUser.setString(2, password);
                 ResultSet result = selectUser.executeQuery();
                 if (result.next()) {
-                    System.out.println("user exist");
+                    // Update ONLINEFLAG and AVAILABLE to true
+                    updatePlayerStatus(name, true, true);
+                    System.out.println("User exists and status updated to online and available.");
                     return true;
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(DatabaseLayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    Logger.getLogger(DatabaseLayer.class.getName()).log(Level.SEVERE, null, ex);
+              }
         } else {
-            System.out.println("connectios is null");
-        }
-        
-        System.out.println("user is not exist");
-        return false;
+                System.out.println("Connection is null.");
+          }
+            System.out.println("User does not exist or login failed.");
+            return false;
     }
+    public static boolean updatePlayerStatus(String username, boolean isOnline, boolean isAvailable) {
+    try {
+        PreparedStatement updateStmt = con.prepareStatement(
+            "UPDATE PLAYERS SET ONLINEFLAG=?, AVAILABLE=? WHERE USERNAME=?"
+        );
+        updateStmt.setBoolean(1, isOnline);
+        updateStmt.setBoolean(2, isAvailable);
+        updateStmt.setString(3, username);
+        return updateStmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error updating player status in DB: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+          }
+    }
+    public static boolean isPlayerAvailable(String username) {
+        try {
+            PreparedStatement stmt = con.prepareStatement(
+                "SELECT AVAILABLE FROM PLAYERS WHERE USERNAME = ?"
+            );
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean("AVAILABLE");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false; 
+    }
+
     //methods of database
+    public static Player getPlayerinfo(String username)
+    {
+        try {
+            PreparedStatement selectUser = con.prepareStatement("SELECT  EMAIL, SCORE From PLAYERS WHERE USERNAME = ?");
+            selectUser.setString(1, username);
+            ResultSet result = selectUser.executeQuery();
+            if(result.next())
+            {
+                return new Player(username, result.getString(1), result.getInt(2));
+            }
+            else
+            {
+                return null;
+            }
+            //System.out.println(result.getString(1)+ result.getInt(2));
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("");
+        return null;
+    }
+
 }

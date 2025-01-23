@@ -39,7 +39,7 @@ public class RequestHandles {
                 gameAcceptanceRequest(jsonObject);
                 break;
             case "register":
-                handleRegister(jsonObject, clientOutput);
+                handleRegister(jsonObject);
                 break;
 
             case "login":
@@ -47,12 +47,17 @@ public class RequestHandles {
                 break;
 
             case "getOnlinePlayers":
-                handleGetOnlinePlayers(jsonObject, clientOutput);
+                handleGetOnlinePlayers(jsonObject);
                 System.out.println("Data acquired");
                 break;
+
             case "sendXOPlay":
                 requestXo(jsonObject);
                 break;
+
+
+            case "Logout":
+                logutHandle(jsonObject);
 
             default:
 
@@ -71,7 +76,7 @@ public class RequestHandles {
         opponentPW.println(jsonmsg.toString());
     }
 
-    private void handleRegister(JsonObject jsonMsg, PrintWriter clientOutput) {
+    private void handleRegister(JsonObject jsonMsg) {
         String username = jsonMsg.getString("username");
         String password = jsonMsg.getString("password");
         String email = jsonMsg.getString("email");
@@ -135,14 +140,23 @@ public class RequestHandles {
     }
 
     private void loginResponse(boolean flag) {
-
+        
         JsonObjectBuilder json = Json.createObjectBuilder();
 
-        JsonObject obj = json
-                .add("Header", "loginResponse")
-                .add("success", flag)
-                .build();
-        String loginResponse = obj.toString();
+        json.add("Header", "loginResponse")
+            .add("success", flag);
+        if(flag)
+        {
+            Player p1=DatabaseLayer.getPlayerinfo(authorizedUsername);
+            if(p1!=null)
+            {
+                json.add("email", p1.email)
+                .add("score", p1.score);
+            }
+            //System.out.println(p1.email + "anddddddd" +p1.score);
+            
+        }
+        String loginResponse = json.build().toString();
         if (clientOutput != null) {
             clientOutput.println(loginResponse);
             System.out.println("login response : " + loginResponse);
@@ -151,19 +165,24 @@ public class RequestHandles {
         }
     }
 
-    private void handleGetOnlinePlayers(JsonObject jsonMsg, PrintWriter clientOutput) {
+    private void handleGetOnlinePlayers(JsonObject jsonMsg) {
         JsonArrayBuilder playersArrayBuilder = Json.createArrayBuilder();
         for (String username : ClientHandler.onlineClientSockets.keySet()) {
+        if (!username.equals(authorizedUsername)) {
+            boolean isAvailable = DatabaseLayer.isPlayerAvailable(username);
             playersArrayBuilder.add(Json.createObjectBuilder()
-                    .add("username", username)
-                    .build());
-        }
+                .add("username", username)
+                .add("available", isAvailable)
+                .build());
+        }     
+    }
         JsonObject response = Json.createObjectBuilder()
                 .add("Header", "onlinePlayersList")
                 .add("players", playersArrayBuilder.build())
                 .build();
         clientOutput.println(response.toString());
     }
+
 
     private void requestXo(JsonObject jsonObject) {
      
@@ -177,6 +196,11 @@ public class RequestHandles {
 
         PrintWriter pw = ClientHandler.onlineClientSockets.get(player);
         pw.println(jsonString);
+        
+
+    private void logutHandle(JsonObject jsonObject) {
+        DatabaseLayer.updatePlayerStatus(jsonObject.getString("username"),false,false);
+        ClientHandler.onlineClientSockets.remove(jsonObject.getString("username"));
         
 
     }
