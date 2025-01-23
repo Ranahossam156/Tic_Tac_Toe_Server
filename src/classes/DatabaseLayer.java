@@ -63,8 +63,8 @@ public class DatabaseLayer {
             updateStmt = con.prepareStatement("UPDATE PLAYERS SET AVAILABLE=? WHERE USERNAME=?");
 
             System.out.println("update statement done");
-            updateStmt.setString(2, isAvailable ? "true" : "false");
-            updateStmt.setString(1, username);
+            updateStmt.setString(1, isAvailable ? "true" : "false");
+            updateStmt.setString(2, username);
             return updateStmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             System.out.println("Error in updating availabilty in DB");

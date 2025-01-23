@@ -50,6 +50,9 @@ public class RequestHandles {
                 handleGetOnlinePlayers(jsonObject, clientOutput);
                 System.out.println("Data acquired");
                 break;
+            case "sendXOPlay":
+                requestXo(jsonObject);
+                break;
 
             default:
 
@@ -160,6 +163,22 @@ public class RequestHandles {
                 .add("players", playersArrayBuilder.build())
                 .build();
         clientOutput.println(response.toString());
+    }
+
+    private void requestXo(JsonObject jsonObject) {
+     
+        String player = jsonObject.getString("player");
+        int position = jsonObject.getInt("position") ; 
+        JsonObject object = Json.createObjectBuilder()
+                .add("Header", "XOPlay")
+                .add("position" , position)
+                .build();
+        String jsonString = object.toString();
+
+        PrintWriter pw = ClientHandler.onlineClientSockets.get(player);
+        pw.println(jsonString);
+        
+
     }
 
 }
