@@ -224,4 +224,19 @@ public class DatabaseLayer {
         return null;
     }
 
+    static boolean updateScore(String winnerName, String loserName) {
+
+        try {
+            PreparedStatement winnerStmt = con.prepareStatement("UPDATE PLAYERS SET SCORE = SCORE+10 WHERE USERNAME=?");
+            winnerStmt.setString(1, winnerName);
+            
+            PreparedStatement loserStmt = con.prepareStatement("UPDATE PLAYERS SET SCORE = SCORE-10 WHERE USERNAME=?");
+            loserStmt.setString(1, loserName);
+            return winnerStmt.executeUpdate() > 0 && loserStmt.executeUpdate()>0;
+        } catch (SQLException ex) {
+            System.out.println("error updating score in DB");
+            return false;
+        }
+    }
+
 }
