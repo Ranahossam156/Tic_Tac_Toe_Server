@@ -26,7 +26,7 @@ public class DatabaseLayer {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 
 
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Players", "root", "root");
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tac Toe", "root", "root");
 
 
         } catch (SQLException ex) {
