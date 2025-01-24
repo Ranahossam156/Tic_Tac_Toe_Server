@@ -54,12 +54,12 @@ private void initializeServer() {
 
 private void configureBarChart() {
     NumberAxis yAxis = (NumberAxis) barChart.getYAxis();
-
-    // Configure the y-axis
+CategoryAxis xAxis = (CategoryAxis) barChart.getXAxis();
     yAxis.setAutoRanging(false);
     yAxis.setLowerBound(0);
-    yAxis.setUpperBound(10); // Adjust as needed
+    yAxis.setUpperBound(10); 
     yAxis.setTickUnit(1);
+    xAxis.getStyleClass().add("chart-category-axis");
     yAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxis) {
         @Override
         public String toString(Number object) {
@@ -75,6 +75,7 @@ private void initializeData() {
 
 private XYChart.Series<String, Number> createInitialData() {
     XYChart.Series<String, Number> data = new XYChart.Series<>();
+    
     data.setName("Users Status");
 
     try {
@@ -82,7 +83,6 @@ private XYChart.Series<String, Number> createInitialData() {
         int availableCount = DatabaseLayer.getAvailableCount();
         int offlineCount = DatabaseLayer.getOfflineCount();
 
-        // Add initial data to the series
         data.getData().add(new XYChart.Data<>("Online", onlineCount));
         data.getData().add(new XYChart.Data<>("Available to play", availableCount));
         data.getData().add(new XYChart.Data<>("Offline", offlineCount));
@@ -99,19 +99,15 @@ private void startDynamicUpdates() {
     new Thread(() -> {
         while (true) {
             try {
-                // Fetch updated data from the database
                 int onlineCount = DatabaseLayer.getOnlineCount();
                 int availableCount = DatabaseLayer.getAvailableCount();
                 int offlineCount = DatabaseLayer.getOfflineCount();
 
-                // Update data points on the JavaFX Application Thread
                 javafx.application.Platform.runLater(() -> {
                     data.getData().get(0).setYValue(onlineCount);
                     data.getData().get(1).setYValue(availableCount);
                     data.getData().get(2).setYValue(offlineCount);
                 });
-
-                // Pause before updating again
                 Thread.sleep(1000);
             } catch (SQLException | InterruptedException e) {
                 e.printStackTrace();

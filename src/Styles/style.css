@@ -8,19 +8,22 @@ and open the template in the editor.
     Author     : a
 */
 .default-color0.chart-bar {
-    -fx-bar-fill: #8ccdf7;
+    -fx-bar-fill: #6198B4;
 }
 .bar-chart {
-    -fx-bar-gap: 10; /* Space between bars in the same category */
-    -fx-category-gap: 80; /* Space between categories */
+    -fx-bar-gap: 10; 
+    -fx-category-gap: 100;
 }
 .chart-axis .axis-label {
-    -fx-text-fill: #ffffff; /* White color */
+    -fx-text-fill: #ffffff;
 }
 
-/* Change NumberAxis label color */
 .chart-axis .axis-label {
-    -fx-text-fill: #ffffff; /* White color */
+    -fx-text-fill: #ffffff;
+}
+.chart-category-axis .tick-label {
+    -fx-font-size: 20px; 
+    -fx-text-fill: #000000; 
 }
 
 
