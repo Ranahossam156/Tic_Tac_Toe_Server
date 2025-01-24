@@ -112,15 +112,16 @@ public class RequestHandles {
         //send acceptance to other client
         DatabaseLayer.updateAvailabilty(jsonMsg.getString("opponentUsername"), false);
         DatabaseLayer.updateAvailabilty(authorizedUsername, false);
-        sendGameAcceptanceResponce(jsonMsg.getString("opponentUsername"));
+        sendGameAcceptanceResponce(jsonMsg.getString("opponentUsername"),jsonMsg.getInt("myScore"));
 
     }
 
-    private void sendGameAcceptanceResponce(String opponentUsername) {
+    private void sendGameAcceptanceResponce(String opponentUsername,int opponentScore) {
         JsonObjectBuilder value = Json.createObjectBuilder();
         JsonObject jsonmsg = value
                 .add("Header", "gameAcceptanceResponce")
                 .add("opponentUsername", authorizedUsername)
+                .add("opponentScore", opponentScore)
                 .build();
 
         PrintWriter opponentPW = ClientHandler.onlineClientSockets.get(opponentUsername);
@@ -201,7 +202,11 @@ public class RequestHandles {
         {
             DatabaseLayer.updateAvailabilty(player, true);
             DatabaseLayer.updateAvailabilty(authorizedUsername, true);
-            DatabaseLayer.updateScore(authorizedUsername,player);
+            if(!jsonObject.getString("winnerName").equals("noWinner"))
+            {
+                DatabaseLayer.updateScore(authorizedUsername,player);
+            }
+
         }
         
     }
