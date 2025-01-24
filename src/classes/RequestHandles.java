@@ -72,6 +72,7 @@ public class RequestHandles {
         JsonObject jsonmsg = value
                 .add("Header", "gameRequest")
                 .add("username", authorizedUsername)
+                .add("opponentScore",jsonMsg.getInt("myScore"))
                 .build();
         opponentPW.println(jsonmsg.toString());
     }
@@ -196,8 +197,14 @@ public class RequestHandles {
 
         PrintWriter pw = ClientHandler.onlineClientSockets.get(player);
         pw.println(jsonString);
+        if(jsonObject.containsKey("winnerName"))
+        {
+            DatabaseLayer.updateAvailabilty(player, true);
+            DatabaseLayer.updateAvailabilty(authorizedUsername, true);
+            DatabaseLayer.updateScore(authorizedUsername,player);
+        }
         
-
+    }
     private void logutHandle(JsonObject jsonObject) {
         DatabaseLayer.updatePlayerStatus(jsonObject.getString("username"),false,false);
         ClientHandler.onlineClientSockets.remove(jsonObject.getString("username"));

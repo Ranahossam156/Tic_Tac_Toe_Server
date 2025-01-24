@@ -26,7 +26,7 @@ public class DatabaseLayer {
             DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
 
 
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Tic Tak Toe", "root", "root");
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/Players", "root", "root");
 
 
         } catch (SQLException ex) {
@@ -222,6 +222,21 @@ public class DatabaseLayer {
         }
         System.out.println("");
         return null;
+    }
+
+    static boolean updateScore(String winnerName, String loserName) {
+
+        try {
+            PreparedStatement winnerStmt = con.prepareStatement("UPDATE PLAYERS SET SCORE = SCORE+10 WHERE USERNAME=?");
+            winnerStmt.setString(1, winnerName);
+            
+            PreparedStatement loserStmt = con.prepareStatement("UPDATE PLAYERS SET SCORE = SCORE-10 WHERE USERNAME=?");
+            loserStmt.setString(1, loserName);
+            return winnerStmt.executeUpdate() > 0 && loserStmt.executeUpdate()>0;
+        } catch (SQLException ex) {
+            System.out.println("error updating score in DB");
+            return false;
+        }
     }
 
 }
