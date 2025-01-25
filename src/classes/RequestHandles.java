@@ -229,6 +229,7 @@ public class RequestHandles {
         pw.println(jsonmsg.toString());
         DatabaseLayer.updateScore(jsonObject.getString("username"),authorizedUsername);
         DatabaseLayer.updateAvailabilty(jsonObject.getString("username"), true);
+        DatabaseLayer.updateAvailabilty(authorizedUsername, true);
     }
 
 }
