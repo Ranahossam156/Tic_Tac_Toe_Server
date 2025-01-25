@@ -12,7 +12,7 @@ and open the template in the editor.
 }
 .bar-chart {
     -fx-bar-gap: 10; 
-    -fx-category-gap: 100;
+    -fx-category-gap: 150;
 }
 .chart-axis .axis-label {
     -fx-text-fill: #ffffff;
@@ -24,6 +24,23 @@ and open the template in the editor.
 .chart-category-axis .tick-label {
     -fx-font-size: 20px; 
     -fx-text-fill: #000000; 
+}
+#startButton, #closeButton {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
+    -fx-text-fill: #629cba;
+    -fx-cursor: hand; 
+}
+#startButton:hover, #closeButton:hover {
+    -fx-background-color: #629cba;
+    -fx-text-fill: #A0D6E7;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 5);
+}
+#startButton:pressed, #closeButton:pressed {
+    -fx-background-color: #206390;
+    -fx-text-fill: #629cba;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 15, 0, 0, 7);
 }
 
 
