@@ -22,7 +22,7 @@
             </ImageView>
             <Button fx:id="startButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickStart" prefHeight="37.0" prefWidth="141.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);" text="Start" textFill="#629cba">
                <font>
-                  <Font name="System Bold" size="14.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="30.0" top="30.0" />
@@ -33,15 +33,21 @@
                   <Insets />
                </VBox.margin>
                <font>
-                  <Font name="System Bold" size="14.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Button>
             <BarChart fx:id="barChart" prefHeight="411.0" prefWidth="750.0">
               <xAxis>
-                <CategoryAxis label="Status" tickLabelFill="WHITE" />
+                <CategoryAxis label="Status" tickLabelFill="WHITE">
+                     <tickLabelFont>
+                        <Font name="System Bold" size="14.0" />
+                     </tickLabelFont></CategoryAxis>
               </xAxis>
               <yAxis>
-                <NumberAxis label="Number of user" side="LEFT" tickLabelFill="WHITE" />
+                <NumberAxis label="Number of user" side="LEFT" tickLabelFill="WHITE">
+                     <tickLabelFont>
+                        <Font size="14.0" />
+                     </tickLabelFont></NumberAxis>
               </yAxis>
             </BarChart>
          </children>
