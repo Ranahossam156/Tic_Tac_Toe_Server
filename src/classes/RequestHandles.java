@@ -21,7 +21,6 @@ public class RequestHandles {
 
     String authorizedUsername = null;
     PrintWriter clientOutput;
-
     public void messageDeligator(String networkmsg) {
         JsonReader jsonReader = Json.createReader(new StringReader(networkmsg));
         JsonObject jsonObject = jsonReader.readObject();
@@ -53,6 +52,9 @@ public class RequestHandles {
 
             case "sendXOPlay":
                 requestXo(jsonObject);
+                break;
+            case "retreat":
+                sendRetreat(jsonObject);
                 break;
 
 
@@ -215,6 +217,19 @@ public class RequestHandles {
         ClientHandler.onlineClientSockets.remove(jsonObject.getString("username"));
         
 
+    }
+
+    private void sendRetreat(JsonObject jsonObject) {
+        PrintWriter pw = ClientHandler.onlineClientSockets.get(jsonObject.getString("username"));
+        JsonObjectBuilder value = Json.createObjectBuilder();
+        JsonObject jsonmsg = value
+                .add("Header", "opponentRetreat")
+                //.add("", opponentPlayer.getName())
+                .build();
+        pw.println(jsonmsg.toString());
+        DatabaseLayer.updateScore(jsonObject.getString("username"),authorizedUsername);
+        DatabaseLayer.updateAvailabilty(jsonObject.getString("username"), true);
+        DatabaseLayer.updateAvailabilty(authorizedUsername, true);
     }
 
 }

@@ -69,10 +69,12 @@ public class ClientHandler implements Runnable {
                   //  System.out.println("test");
                 } catch (IOException ex) {
                     //client disconnected
-                    onlineClientSockets.remove(handler.authorizedUsername);
+                    System.out.println("client disconnnnnnnected");
+                    //onlineClientSockets.remove(handler.authorizedUsername);
                     outputStream.close();
                     inputStream.close();
                     mySocket.close();
+                    break;
                 }
             }
             
