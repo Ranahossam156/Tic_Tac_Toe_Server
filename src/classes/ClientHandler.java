@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonObject;
 
 /**
  *
@@ -42,6 +43,11 @@ public class ClientHandler implements Runnable {
         try {
             outputStream = new PrintWriter(mySocket.getOutputStream(),true);
             inputStream= new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+            JsonObject authTokenMessage = Json.createObjectBuilder()
+                .add("Header", "authToken")
+                .add("token", "TicTacToeServer")
+                .build();
+        outputStream.println(authTokenMessage.toString());
             handler = new RequestHandles();
             handler.clientOutput=outputStream;
             
@@ -57,7 +63,7 @@ public class ClientHandler implements Runnable {
                     outputStream.close();
                     inputStream.close();
                     mySocket.close();
-                    System.out.println("feild to read msg");
+                    System.out.println("failed to read msg");
                 }
             }
             while(handler.authorizedUsername==null);
