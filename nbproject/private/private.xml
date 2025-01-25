@@ -6,11 +6,13 @@
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/classes/RequestHandles.java</file>
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/Styles/style.css</file>
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/classes/Server.java</file>
+            <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/mygui/ServerGUI.java</file>
+            <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/views/FXMLDocument.fxml</file>
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/mygui/FXMLDocumentController.java</file>
+            <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/mygui/MyGUI.java</file>
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/classes/ClientHandler.java</file>
+            <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/classes/Player.java</file>
             <file>file:/C:/Users/a/Documents/NetBeansProjects/MyGUI/src/classes/DatabaseLayer.java</file>
-
         </group>
-
     </open-files>
 </project-private>
