@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
+import  java.lang.NullPointerException;
 
 /**
  *
@@ -55,7 +56,15 @@ public class ClientHandler implements Runnable {
                 try {
                     firstmsg=inputStream.readLine();
                     System.out.println("first msg" + firstmsg);
-                    handler.messageDeligator(firstmsg);
+                    if(firstmsg!=null)
+                    {
+                        handler.messageDeligator(firstmsg);
+                    }
+                    else
+                    {
+                        throw new IOException("Input stream is null");
+                    }
+                    
                     if(handler.authorizedUsername!=null){
                         onlineClientSockets.put(handler.authorizedUsername, outputStream);
                     }
@@ -64,6 +73,7 @@ public class ClientHandler implements Runnable {
                     inputStream.close();
                     mySocket.close();
                     System.out.println("feild to read msg");
+                    break;
                 }
             }
             while(handler.authorizedUsername==null);
