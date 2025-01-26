@@ -48,8 +48,9 @@ public class Server {
         acceptingClients = false;
         try {
             if (serverSocket != null && !serverSocket.isClosed()) {
+                
                 serverSocket.close();
-                System.out.println("Server stopped accepting new clients...");
+                System.out.println("Server stopped accepting new clients");
             }
         } catch (IOException e) {
             System.out.println("Error stopping server socket");
