@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import  java.lang.NullPointerException;
+import javax.json.JsonObjectBuilder;
 
 /**
  *
@@ -29,6 +30,17 @@ public class ClientHandler implements Runnable {
     Socket mySocket;
     RequestHandles handler;
     
+     public static void notifyServerDisconnection() {
+        JsonObjectBuilder value = Json.createObjectBuilder();
+        JsonObject jsonmsg = value
+                .add("Header", "serverDisconnected")
+                .build();
+
+        for (PrintWriter pw : onlineClientSockets.values()) {
+            pw.println(jsonmsg.toString());
+        }
+        onlineClientSockets.clear();
+    }
 
     
     public ClientHandler(Socket newClient) 
@@ -78,11 +90,11 @@ public class ClientHandler implements Runnable {
             }
             while(handler.authorizedUsername==null);
           
-            while(true){
+            while (true) {
                 try {
 
                     handler.messageDeligator(inputStream.readLine());
-                  //  System.out.println("test");
+
                 } catch (IOException ex) {
                     //client disconnected
                     System.out.println("client disconnnnnnnected");
