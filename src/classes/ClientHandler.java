@@ -29,18 +29,6 @@ public class ClientHandler implements Runnable {
     BufferedReader inputStream;
     Socket mySocket;
     RequestHandles handler;
-    
-     public static void notifyServerDisconnection() {
-        JsonObjectBuilder value = Json.createObjectBuilder();
-        JsonObject jsonmsg = value
-                .add("Header", "serverDisconnected")
-                .build();
-
-        for (PrintWriter pw : onlineClientSockets.values()) {
-            pw.println(jsonmsg.toString());
-        }
-        onlineClientSockets.clear();
-    }
 
     
     public ClientHandler(Socket newClient) 

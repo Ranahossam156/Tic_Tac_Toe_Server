@@ -60,11 +60,6 @@ public class RequestHandles {
 
             case "Logout":
                 logutHandle(jsonObject);
-                
-            case "serverDisconnected":
-                System.out.println("Server disconnected clearing online list.");
-                ClientHandler.onlineClientSockets.clear();
-                break;
 
             default:
 
